@@ -6,6 +6,8 @@ from typing import Dict, Text, Any, Callable, Awaitable, Optional, TYPE_CHECKING
 
 from rasa.core.channels.channel import InputChannel
 from rasa.core.channels.channel import UserMessage, OutputChannel
+import asyncio
+import time
 
 from heyoo import WhatsApp
 from typing import (
@@ -44,7 +46,7 @@ class WhatsAppOutput(WhatsApp, OutputChannel):
 
         for message_part in text.strip().split("\n\n"):
             self.send_message(message_part, recipient_id=recipient_id)
-
+            await asyncio.sleep(2)
     async def send_text_with_buttons(
         self,
         recipient_id: Text,
@@ -169,8 +171,7 @@ class WhatsAppInput(InputChannel):
                         raise
                     pass
             else:
-                logger.debug(request.json)
-                #logger.debug("Invalid message")
+                logger.debug("Invalid message")
 
             return response.text("", status=204)
 
